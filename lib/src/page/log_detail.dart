@@ -1,3 +1,5 @@
+import 'package:dio_log_viewer/src/widget/custom_tab_indicator.dart';
+
 import './error_page.dart';
 import './request_page.dart';
 import './response_page.dart';
@@ -7,18 +9,17 @@ import 'package:flutter/material.dart';
 
 class LogDetail extends StatefulWidget {
   final ResultEntity entity;
+
   const LogDetail({super.key, required this.entity});
 
   @override
   State<LogDetail> createState() => _LogDetailState();
 }
 
-class _LogDetailState extends State<LogDetail>
-    with SingleTickerProviderStateMixin {
+class _LogDetailState extends State<LogDetail> with SingleTickerProviderStateMixin {
   String title = 'Request';
 
-  late final TabController _tabController =
-      TabController(length: 4, vsync: this);
+  late final TabController _tabController = TabController(length: 4, vsync: this);
 
   @override
   void initState() {
@@ -60,8 +61,7 @@ class _LogDetailState extends State<LogDetail>
           title: Text(title),
         ),
         body: TabBarView(controller: _tabController, children: [
-          RequestPage(widget.entity.options, widget.entity.startTime!,
-              widget.entity.endTime),
+          RequestPage(widget.entity.options, widget.entity.startTime!, widget.entity.endTime),
           ResponsePage(widget.entity.response),
           ErrorPage(widget.entity.err),
           TryAgainPage(widget.entity)
@@ -78,21 +78,27 @@ class _LogDetailState extends State<LogDetail>
               ),
             ],
           ),
-          child: TabBar(
-              controller: _tabController,
-              unselectedLabelColor: Colors.black,
-              labelColor: Theme.of(context).primaryColor,
-              indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
-              labelStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-              unselectedLabelStyle:
-                  const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
-              tabs: const [
-                Tab(text: 'Request'),
-                Tab(text: 'Response'),
-                Tab(text: 'Error'),
-                Tab(text: 'TryAgain'),
-              ]),
+          child: SafeArea(
+            child: TabBar(
+                controller: _tabController,
+                unselectedLabelColor: Colors.black,
+                labelColor: Theme.of(context).primaryColor,
+                indicatorPadding: const EdgeInsets.symmetric(horizontal: 20),
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                unselectedLabelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                indicatorSize: TabBarIndicatorSize.tab,
+                indicator: CustomTabIndicator(
+                  color: Theme.of(context).primaryColor,
+                  radius: 3,
+                  fixedWidth: 16,
+                ),
+                tabs: const [
+                  Tab(text: 'Request'),
+                  Tab(text: 'Response'),
+                  Tab(text: 'Error'),
+                  Tab(text: 'TryAgain'),
+                ]),
+          ),
         ));
   }
 }
